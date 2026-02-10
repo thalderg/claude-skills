@@ -12,7 +12,7 @@ Intelligently filter and rank large collections (20-3000+) of technical resource
 
 **Usage:**
 ```
-"Use two-phase-resource-curator on https://github.com/thalderg/claude-skills/tree/main/Two-Phase%20Resource%20Curator"
+"Use two-phase-resource-curator on https://github.com/thalderg/claude-skills/tree/main/two-phase-resource-curator"
 ```
 
 ---
