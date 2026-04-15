@@ -1,75 +1,193 @@
-# My Custom Claude Skills
+# Claude Skills Collection
 
-A collection of custom skills for Claude Projects.
+A collection of custom skills for Claude AI - compatible with Claude Projects, Claude Code, and the Claude API.
 
-## Available Skills
+## 📂 What's Inside
 
-### 🎯 two-phase-resource-curator
-Intelligently filter and rank large collections (20-3000+) of technical resources using statistical metadata filtering and optional deep quality analysis.
+Each folder in this repository is a self-contained skill with its own `SKILL.md` file and supporting resources. Browse the repository to see available skills - each skill folder contains documentation explaining what it does and how to use it.
 
-**Location:** `/two-phase-resource-curator/`
-**Documentation:** [SKILL.md](./two-phase-resource-curator/SKILL.md)
+---
 
-**Usage:**
+## 🚀 Installation
+
+### For Claude Projects (Web/Desktop)
+
+**Option 1: Add Entire Repository**
+1. Open your Claude Project
+2. Go to Project Settings → Knowledge → Add GitHub repository
+3. Enter URL: `https://github.com/YOUR-USERNAME/claude-skills`
+4. Select all or specific skills you want
+
+**Option 2: Upload Individual Skills**
+1. Download a specific skill folder from this repo
+2. Zip the folder (must contain the folder itself, not just contents)
+3. Settings → Capabilities → Upload skill
+4. Upload the ZIP file
+
+**Usage in Projects:**
 ```
-"Use two-phase-resource-curator on https://github.com/thalderg/claude-skills/tree/main/two-phase-resource-curator"
+Use [skill-name] to [task description]
+```
+
+### For Claude Code
+
+**Option 1: Install as Plugin (Recommended)**
+```bash
+# Add this repository as a plugin marketplace
+/plugin marketplace add YOUR-USERNAME/claude-skills
+
+# List available skills
+/plugin list
+
+# Install specific skills
+/plugin install skill-name@YOUR-USERNAME-claude-skills
+```
+
+**Option 2: Clone to Your Skills Directory**
+
+For project-specific use:
+```bash
+cd your-project/.claude/skills/
+git clone https://github.com/YOUR-USERNAME/claude-skills.git
+```
+
+For global use across all projects:
+```bash
+cd ~/.claude/skills/
+git clone https://github.com/YOUR-USERNAME/claude-skills.git
+```
+
+**Option 3: Git Submodule (For Team Sharing)**
+```bash
+# Add as submodule to share with your team
+git submodule add https://github.com/YOUR-USERNAME/claude-skills.git .claude/skills/shared-skills
+git submodule update --init --recursive
+
+# Team members clone with:
+git clone --recurse-submodules [your-repo-url]
+```
+
+**Usage in Claude Code:**
+```bash
+# If installed as plugin
+/skill-name [arguments]
+
+# Or reference naturally
+"Use the skill-name skill to accomplish [task]"
+```
+
+### For Claude API
+
+See [Skills API Documentation](https://docs.anthropic.com/en/docs/build-with-claude/skills) for integrating these skills programmatically.
+
+---
+
+## 🔍 Discovering Skills
+
+**In this repository:**
+- Each top-level folder is a skill
+- Read the `SKILL.md` file in each folder for documentation
+- Look for `examples/` folders for usage examples
+
+**In Claude Code:**
+```bash
+# List all installed skills
+/skills
+
+# Search for specific skills
+/plugin search [keyword]
 ```
 
 ---
 
-## Installation for Claude Projects
+## 📁 Skill Structure
 
-Add this repository to your Claude Project:
-1. Project Settings → Knowledge → Add GitHub repository
-2. URL: `https://github.com/thalderg/claude-skills`
+Each skill follows this standard structure:
 
-All skills will be available at:
-- `/mnt/skills/user/two-phase-resource-curator/`
-- (future skills will appear here automatically)
-
-## Adding New Skills
-
-To add a new skill to this collection:
-1. Create a new folder: `my-new-skill/`
-2. Add `SKILL.md` and any supporting files
-3. Update this README with the new skill
-4. Commit and push
-5. Claude will automatically sync the new skill
-
-## Skills Roadmap
-
-- [x] two-phase-resource-curator
-- [ ] custom-prompt-analyzer (planned)
-- [ ] workflow-optimizer (planned)
+```
+skill-name/
+├── SKILL.md           # Required: Main skill definition
+├── scripts/           # Optional: Executable scripts
+├── examples/          # Optional: Usage examples
+├── templates/         # Optional: Templates to fill
+└── resources/         # Optional: Reference materials
 ```
 
-### Step 3: Create .gitignore
+---
 
-Create `claude-skills/.gitignore`:
+## 🛠️ Contributing Your Own Skills
+
+### Creating a New Skill
+
+1. **Create the skill folder:**
+```bash
+mkdir my-new-skill
+cd my-new-skill
 ```
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
 
-# Environment variables
-.env
-*.env
+2. **Create SKILL.md with frontmatter:**
+```markdown
+---
+name: my-new-skill
+description: Clear, concise description for skill discovery
+---
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# My New Skill
 
-# OS
-.DS_Store
-Thumbs.db
+[Your detailed instructions here]
 
-# Temporary files
-*.tmp
-*.log
+## Usage
+[Examples of how to use this skill]
+
+## Parameters
+[Any arguments or options]
+```
+
+3. **Add supporting files (optional):**
+```bash
+mkdir scripts examples templates
+```
+
+4. **Test locally first:**
+- For Projects: Create a ZIP and upload to test
+- For Claude Code: Place in `.claude/skills/` and test
+
+5. **Commit and push:**
+```bash
+git add my-new-skill/
+git commit -m "feat: add my-new-skill"
+git push
+```
+
+That's it! No need to update this README - the skill will automatically be discoverable.
+
+---
+
+## 🔒 Security Best Practices
+
+- ⚠️ **Never commit credentials** - Use `.env` files (gitignored) or environment variables
+- ✅ **Review scripts** - Audit any executable code before use
+- ✅ **Test in isolation** - Verify skills work before sharing
+- ✅ **Document dependencies** - Note any required packages in SKILL.md
+
+---
+
+## 📖 Learn More
+
+- [Claude Skills Documentation](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
+- [Agent Skills Standard](https://agentskills.io)
+- [Claude Code Skills Guide](https://code.claude.com/docs/en/skills)
+- [How to Create Custom Skills](https://support.claude.com/en/articles/12597488-how-to-create-custom-skills)
+
+---
+
+## 🤝 Support
+
+- **Issues**: [Report bugs or request features](https://github.com/YOUR-USERNAME/claude-skills/issues)
+- **Discussions**: [Ask questions or share ideas](https://github.com/YOUR-USERNAME/claude-skills/discussions)
+
+---
+
+## 📄 License
+
+MIT License
