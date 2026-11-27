@@ -33,11 +33,15 @@ def main():
     cmd = (data.get("tool_input") or {}).get("command", "")
     if not TRIGGER.search(cmd) or os.environ.get("REPO_GUARD_HOOK_OFF"):
         sys.exit(0)
-    rg = shutil.which("repo-guard") or os.path.expanduser("~/code/repo-guard/bin/repo-guard")
-    if not os.path.exists(rg):
-        out("deny", "repo-guard is not installed, so this download or install cannot be checked. Install it (~/code/repo-guard/install.sh) or ask the user.")
+    found = shutil.which("repo-guard.cmd" if os.name == "nt" else "repo-guard")
+    local = os.path.expanduser("~/code/repo-guard/bin/repo-guard")
+    rg = [found] if found else [sys.executable, "-X", "utf8", local] if os.path.exists(local) else None
+    if not rg:
+        out("deny", "repo-guard is not installed, so this download or install cannot be checked. "
+                    "Install it (install.sh, or install.ps1 on Windows, in the repo-guard folder) or ask the user.")
     try:
-        r = subprocess.run([rg, "check-command", "--json", cmd], capture_output=True, text=True, timeout=280)
+        r = subprocess.run(rg + ["check-command", "--json", cmd], capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=280)
         res = json.loads(r.stdout)
     except Exception as e:
         out("deny", f"repo-guard could not check this command ({e}). Do not download or install it; tell the user.")

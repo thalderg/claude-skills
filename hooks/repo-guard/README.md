@@ -29,21 +29,29 @@ The `repo-guard-sandbox` skill (in `skill/`) tells Claude what to do next: expla
 
 ## Install (Claude Code)
 
-1. Install repo-guard first: `~/code/repo-guard/install.sh`
-2. Then: `~/claude-skills/hooks/repo-guard/install.sh`
-   - adds a `PreToolUse` hook on `Bash` to `~/.claude/settings.json` (all projects), next to any hooks you already have, with a backup in `~/.claude/settings.json.bak-repo-guard`;
-   - links the skill to `~/.claude/skills/repo-guard-sandbox`.
+1. Install repo-guard first ([its README](https://github.com/thalderg/repo-guard): `install.sh` on macOS/Linux, `install.ps1` on Windows).
+2. Then, in this folder:
+   - macOS / Linux: `./install.sh`
+   - Windows (PowerShell): `powershell -ExecutionPolicy Bypass -File .\install.ps1`
+
+   Both:
+   - add a `PreToolUse` hook on `Bash` to `~/.claude/settings.json` (all projects), next to any hooks you already have, with a backup in `~/.claude/settings.json.bak-repo-guard` (the merge is done by `settings_merge.py`; running it again replaces its own entry, never adds a second one);
+   - link the skill to `~/.claude/skills/repo-guard-sandbox` (Windows: a directory junction, no administrator rights needed).
 3. Start a new Claude Code session.
 
-Remove: `~/claude-skills/hooks/repo-guard/uninstall.sh` (removes only this hook and the skill link).
+Remove: `./uninstall.sh` (Windows: `uninstall.ps1`). It removes only this hook and the skill link.
 
-The entry it adds:
+The entry it adds (macOS / Linux):
 
 ```json
 { "hooks": { "PreToolUse": [ { "matcher": "Bash", "hooks": [
   { "type": "command", "command": "/Users/<you>/claude-skills/hooks/repo-guard/claude-code/pretooluse.py",
     "timeout": 300, "statusMessage": "repo-guard: checking download/install" } ] } ] } }
 ```
+
+On Windows the command is `"C:/…/python.exe" "C:/Users/<you>/claude-skills/hooks/repo-guard/claude-code/pretooluse.py"`: forward slashes, so it works whether Claude Code runs it through cmd or Git Bash.
+
+Tested: macOS (live). Linux: `~/code/repo-guard/tests/linux-test.sh` tests this hook too, in a throwaway Ubuntu container. Windows: not yet run on a Windows machine.
 
 Claude Code hook reference: https://code.claude.com/docs/en/hooks
 
@@ -70,4 +78,4 @@ Check the tool's own documentation for the exact field names; they differ betwee
 
 - The hook sees only shell commands. Code fetched another way (a browser download, an MCP tool, a file the user drags in) is not checked: run `repo-guard scan <folder>` on it.
 - A determined user (or a prompt-injected agent ignoring the skill) can disable hooks in settings. The hook protects against mistakes and against an agent that follows its rules, not against someone with full control of the machine.
-- See the full manual: `~/code/repo-guard/MANUAL.md`.
+- See the full manual: [MANUAL.md](https://github.com/thalderg/repo-guard/blob/main/MANUAL.md).
