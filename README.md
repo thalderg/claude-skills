@@ -6,6 +6,8 @@ A collection of custom skills for Claude AI - compatible with Claude Projects, C
 
 Each folder in this repository is a self-contained skill with its own `SKILL.md` file and supporting resources. Browse the repository to see available skills - each skill folder contains documentation explaining what it does and how to use it.
 
+The [`hooks/`](hooks/) folder holds **hooks**: small programs that Claude Code (or another AI coding tool) runs automatically at fixed moments, for example before every shell command. Unlike a skill, a hook does not depend on the model remembering to use it. See [Hooks](#-hooks) below.
+
 ---
 
 ## 🚀 Installation
@@ -163,9 +165,24 @@ That's it! No need to update this README - the skill will automatically be disco
 
 ---
 
+## 🪝 Hooks
+
+Hooks live in `hooks/<name>/`, each with its own README, an install script and an uninstall script.
+
+| Hook | What it does | Install |
+|---|---|---|
+| [repo-guard](hooks/repo-guard/) | Before Claude runs any command that downloads code (`git clone`, `gh repo clone`, `npm/pnpm/yarn/bun install`, `npx`, `pip install`, `uvx`, `curl … \| bash`), it checks the repository or package with [repo-guard](https://github.com/thalderg/repo-guard): known malware campaigns (PolinRider), flagged packages (OSV), and odd patterns. Clean → it runs. Odd → you decide. Known bad → blocked. Could not check → blocked, with the reason and what you can do. Comes with the `repo-guard-sandbox` skill, which offers to run a flagged repo in a throwaway container and reports what it does. | `hooks/repo-guard/install.sh` (needs repo-guard installed first) |
+
+**How a hook is wired in Claude Code:** an entry under `hooks` in `~/.claude/settings.json` (all projects) or `.claude/settings.json` (one project). The install scripts add the entry and keep a backup; the uninstall scripts remove only their own entry. Docs: [Claude Code hooks](https://code.claude.com/docs/en/hooks).
+
+**Other AI coding tools:** the check itself is a plain command with exit codes (`repo-guard check-command "<shell command>"` → 0 clean, 1 odd, 2 known bad, 3 could not check), so any tool whose hooks can run a command before a shell command can use it. See [hooks/repo-guard/README.md](hooks/repo-guard/README.md).
+
+---
+
 ## 🔒 Security Best Practices
 
 - ⚠️ **Never commit credentials** - Use `.env` files (gitignored) or environment variables
+- 🛡️ **Check code before it reaches your machine** - The [repo-guard hook](hooks/repo-guard/) checks every clone and install Claude runs
 - ✅ **Review scripts** - Audit any executable code before use
 - ✅ **Test in isolation** - Verify skills work before sharing
 - ✅ **Document dependencies** - Note any required packages in SKILL.md
